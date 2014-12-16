@@ -1,0 +1,5 @@
+integrator:
+    excepciones:
+        E1:
+            mensaje: Hola este es menaje de la excepción  E1 de ejemplo con traslations
+            descripcion: Hola esto es una descripción de la excepción E1 de ejemplo con traslations

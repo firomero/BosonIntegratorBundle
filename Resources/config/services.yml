@@ -1,0 +1,7 @@
+parameters:
+#    integrator.example.class: UCI\Boson\IntegratorBundle\Example
+
+services:
+#    integrator.example:
+#        class: %integrator.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
