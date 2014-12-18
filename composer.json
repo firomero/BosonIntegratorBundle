@@ -1,0 +1,43 @@
+{
+    "name": "boson/integrator-bundle",
+    "license": "UCI-HAVANA",
+    "type": "symfony-bundle",
+    "description": "Boson Integrator",
+    "keywords": ["distribution","configuration"],
+    "authors": [
+        {
+            "name": "Felix I. Romero Rodriguez",
+            "email": "firomero@uci.cu"
+        }
+    ],
+    "autoload": {
+        "psr-0": {  "UCI\\Boson\\IntegratorBundle":"" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "sensio/generator-bundle": "2.3.*",
+        "friendsofsymfony/user-bundle": "1.3.5",
+        "friendsofsymfony/rest-bundle": "0.12",
+        "nelmio/api-doc-bundle": "2.2.*",
+        "jms/serializer-bundle": "0.12.*"
+
+    },
+    "require-dev":{
+        "elao/web-profiler-extra-bundle":"dev-master"
+    },
+    "target-dir": "UCI/Boson/IntegratorBundle",
+    "scripts": {
+        "post-install-cmd": [
+            "UCI\\Boson\\IntegratorBundle\\Composer\\ScriptHandler::buildResourceDir",
+            "UCI\\Boson\\IntegratorBundle\\Composer\\ScriptHandler::buildDefinitionSchema"
+        ],
+        "post-update-cmd": [
+            "UCI\\Boson\\IntegratorBundle\\Composer\\ScriptHandler::buildResourceDir",
+            "UCI\\Boson\\IntegratorBundle\\Composer\\ScriptHandler::buildDefinitionSchema"
+        ]
+    },
+    "minimum-stability": "branches"
+}
