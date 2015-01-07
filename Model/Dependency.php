@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: firomero
+ * User: firomero <firomero@uci.cu>
  * Date: 17/12/2014
  * Time: 13:03
  */

@@ -7,6 +7,7 @@
  */
 
 namespace IntegratorBundle\Tests\Configurator;
+
 use IntegratorBundle\Model\Dependency;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -14,11 +15,11 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 require __DIR__.'./../../Model/Dependency.php';
 
 
-class XmlConfigurationReaderTest extends \PHPUnit_Framework_TestCase {
-         public function getDependencyListTest()
-         {
-
-         }
+class XmlConfigurationReaderTest extends \PHPUnit_Framework_TestCase
+{
+    public function getDependencyListTest()
+    {
+    }
     private function loadDependencyDataList()
     {
         $xml = '<list>
@@ -53,9 +54,9 @@ class XmlConfigurationReaderTest extends \PHPUnit_Framework_TestCase {
         $normalizer = new GetSetMethodNormalizer();
         $encoder = new XmlEncoder();
         $serializer = new Serializer(array($normalizer), array($encoder));
-        for( $iterator->rewind(); $iterator->valid(); $iterator->next() ) {
-            if($iterator->hasChildren()) {
-                $dependencies[]= $serializer->deserialize($iterator->current()->asXML(),'IntegratorBundle\\Model\\Dependency','xml');
+        for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
+            if ($iterator->hasChildren()) {
+                $dependencies[]= $serializer->deserialize($iterator->current()->asXML(), 'IntegratorBundle\\Model\\Dependency', 'xml');
             }
         }
 
@@ -68,20 +69,20 @@ class XmlConfigurationReaderTest extends \PHPUnit_Framework_TestCase {
         $deps = $this->loadDependencyDataList();
         $nmber = count($deps);
 
-        $this->assertEquals($nmber,3);
+        $this->assertEquals($nmber, 3);
     }
 
     public function testClass()
     {
         $deps = new Dependency();
         $class = get_class($deps);
-        $this->assertEquals($class,'IntegratorBundle\\Model\\Dependency');
+        $this->assertEquals($class, 'IntegratorBundle\\Model\\Dependency');
     }
 
     public function testObject()
     {
         $deps = $this->loadDependencyDataList();
         $class =get_class($deps[0]) ;
-        $this->assertEquals($class,'IntegratorBundle\\Model\\Dependency');
+        $this->assertEquals($class, 'IntegratorBundle\\Model\\Dependency');
     }
-} 
+}

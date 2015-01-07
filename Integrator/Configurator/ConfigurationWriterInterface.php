@@ -9,10 +9,21 @@
 namespace IntegratorBundle\Integrator\Configurator;
 
 
+use IntegratorBundle\Model\Dependency;
+
 interface ConfigurationWriterInterface {
     /**
      * @param $path
      * @return mixed
      */
     public function write($path);
+
+    public function insert(Dependency $dependency, $type);
+
+    /**
+     * @param $dependency
+     * @param $type
+     * @return mixed
+     */
+    public function dumps( $dependency, $type);
 } 

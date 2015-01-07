@@ -19,6 +19,10 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('integrator');
+        $rootNode->children()
+            ->scalarNode('deps')->defaultValue('empty')->end()
+            ->scalarNode('resolved')->defaultValue('empty')->end()
+            ->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

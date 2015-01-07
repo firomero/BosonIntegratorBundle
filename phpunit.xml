@@ -11,7 +11,7 @@
         bootstrap                   = "Tests/vendor/bootstrap.php">
         <testsuites>
         <testsuite name="Dependency">
-            <directory>Tests/Configurator</directory>
+            <directory>Tests/Manager</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,3 +1,12 @@
-integrator_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: IntegratorBundle:Default:index }
+hello_page:
+     pattern: /hello/page
+     defaults: { _controller: "IntegratorBundle:Integrator:hello" }
+
+NelmioApiDocBundle:
+     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+     prefix:   /api/doc
+
+integrator_deps:
+     type: rest
+     prefix: /dependency
+     resource: UCI\Boson\IntegratorBundle\Controller\DependencyController

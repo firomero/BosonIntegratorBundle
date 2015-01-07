@@ -29,5 +29,10 @@ class IntegratorExtension extends ExcepcionesExtension
         $extExcepciones->loadFileExcepciones($container);
         $AspectExt = new AspectExtension();
         $AspectExt->loadFileAspects($container);
+        foreach($config as $configKey => $configVal) {
+            $container->setParameter($configKey, $configVal);
+        }
+
+
     }
 }
