@@ -1,0 +1,43 @@
+{
+    "title":"Definiciones",
+    "dependencias":[
+        {
+            "name":"Stub1",
+            "domain":"StubDomain",
+            "version":"1.2",
+            "optional":"true",
+            "editable":"false",
+            "bundlename":"pepe",
+            "type":"dependencia",
+            "properties":[
+                {
+                    "stubname":"string",
+                    "stubid":"integer",
+                    "stubci":"string",
+                    "stubdate":"datetime"
+                }
+            ]
+        }
+    ],
+    "servicios":[
+        {
+            "name":"Stub4",
+            "domain":"StubDomain",
+            "version":"1.4",
+            "optional":"true",
+            "editable":"false",
+            "bundlename":"julio",
+            "uri":"http://api/rest/stub4",
+            "type":"servicio",
+            "properties":[
+                {  "stub4name":"string",
+                    "stub4id":"integer",
+                    "stub4ci":"string",
+                    "stub4date":"datetime",
+                    "stub4uri":"uri"
+
+                }
+            ]
+        }
+    ]
+}

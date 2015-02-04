@@ -47,8 +47,8 @@ public static function buildResourceDir(CommandEvent $commandEvent)
 
     protected static function executeDefinitionSchema($webDir)
     {
-        if (file_exists(__DIR__.'/definition.xsd')) {
-            copy(__DIR__.'/definition.xsd',$webDir.'/definition.xsd');
+        if (file_exists(__DIR__.'/definition.json')) {
+            copy(__DIR__.'/definition.json',$webDir.'/definition.json');
         }
     }
 

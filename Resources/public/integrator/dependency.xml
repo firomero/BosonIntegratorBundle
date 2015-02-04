@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+        <list>
+            <dependency>
+                <id>1</id>
+                <name>boson/untitled</name>
+                <version>dev-master</version>
+                <uri>untitled</uri>
+            </dependency>
+        </list>

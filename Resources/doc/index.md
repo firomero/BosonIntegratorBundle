@@ -27,4 +27,5 @@ Habilitar el bundle en el AppKernel
  4. uris.md
  5. seguridad.md
  6. comandos.md
+ 7. configuraciones.md
 

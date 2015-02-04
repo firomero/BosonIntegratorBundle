@@ -10,8 +10,8 @@
         syntaxCheck                 = "false"
         bootstrap                   = "Tests/vendor/bootstrap.php">
         <testsuites>
-        <testsuite name="Dependency">
-            <directory>Tests/Manager</directory>
+            <testsuite name="Locator">
+            <directory>Tests/Locator</directory>
         </testsuite>
     </testsuites>
 </phpunit>
