@@ -1,0 +1,30 @@
+#/*******************************************************************************************************#
+#Las excepciones se configuran especificando los parámentros mostrados en la excepción de ejemplo "E1"
+#Si desea incluir internacionalización a los atributos de la excepción debe sustituir los valores de los
+#parametros "mensaje" y "descripcion" por el codigo del mensaje especificado en los archivos
+#translatesexcepciones.* de la carpeta config/traslations, ejemplo:
+#        E1:
+#            mensaje: integrator.excepciones.E1.mensaje
+#            descripcion: integrator.excepciones.E1.descripcion
+#/*******************************************************************************************************#
+
+excepciones:
+    excepciones:
+        E1:
+            mensaje: integrator.excepciones.E1.mensaje
+            descripcion: integrator.excepciones.E1.descripcion
+        E2:
+            mensaje: integrator.excepciones.E2.mensaje
+            descripcion: integrator.excepciones.E2.descripcion
+        E3:
+            mensaje: integrator.excepciones.E3.mensaje
+            descripcion: integrator.excepciones.E3.descripcion
+        E4:
+            mensaje: integrator.excepciones.E4.mensaje
+            descripcion: integrator.excepciones.E4.descripcion
+        E5:
+            mensaje: integrator.excepciones.E5.mensaje
+            descripcion: integrator.excepciones.E5.descripcion
+        E6:
+            mensaje: integrator.excepciones.E6.mensaje
+            descripcion: integrator.excepciones.E6.descripcion

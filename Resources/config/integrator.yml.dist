@@ -1,0 +1,8 @@
+#Configuracion de IntegratorBundle
+integrator:
+        server:
+            is_server: true
+            app_list: [ http://localhost/app1/api/rest, http://localhost/app2/api/rest, http://localhost/app3/api/rest  ]
+            sensitive: false
+        client:
+            server: 'http://localhost/appserver/api/rest'
