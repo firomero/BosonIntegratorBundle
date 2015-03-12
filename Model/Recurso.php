@@ -10,7 +10,11 @@ namespace IntegratorBundle\Model;
 
 
 use Symfony\Component\DependencyInjection\Container;
+use UCI\Boson\IntegratorBundle\Annotation\RestService;
 
+/*
+ * @RestService(name="recurso",domain="api",allow={"GET"})
+ * */
 class Recurso extends AbstractResource{
 
     protected $integratorKernel;

@@ -9,11 +9,11 @@ services:
 #        arguments: [@service_id, "plain_value", %parameter%]
 
     integrator.manager:
-        class: IntegratorBundle\Manager\ServiceManager
+        class: UCI\Boson\IntegratorBundle\Manager\ServiceManager
         arguments: ['@uci.boson.cache', %server.sensitive% ]
     integrator.kernel:
-        class: IntegratorBundle\Manager\IntegratorKernel
-        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@service_container" ]
+        class: UCI\Boson\IntegratorBundle\Manager\IntegratorKernel
+        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@logger" ]
 
 
     integrator.service.rest:

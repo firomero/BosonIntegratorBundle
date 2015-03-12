@@ -1,15 +1,15 @@
 <?php
 
 
-namespace IntegratorBundle\Manager;
+namespace UCI\Boson\IntegratorBundle\Manager;
 
 use GuzzleHttp\Client;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
 use UCI\Boson\IntegratorBundle\Events\ClientEvents;
 use UCI\Boson\IntegratorBundle\Events\GetClientEvents;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class IntegratorKernel
@@ -35,13 +35,13 @@ class IntegratorKernel {
     protected $recursos;
 
 
-    protected $container ;
+    protected $logger ;
 
     /**
      * @param $server
      * @param $client
      */
-    public function __construct($server, $client,ServiceManager $serviceManager, EventDispatcherInterface $dispatcher, Container $container )
+    public function __construct($server, $client,ServiceManager $serviceManager, EventDispatcherInterface $dispatcher, Logger $logger )
     {
 
         $this->config['server']=$server;
@@ -56,7 +56,7 @@ class IntegratorKernel {
 
         $this->recursos = $this->CargarRecursos();
 
-        $this->container = $container;
+        $this->logger = $logger;
     }
 
 
@@ -120,21 +120,22 @@ class IntegratorKernel {
     public function Representaciones($url)
     {
         $client = new Client();
-        $response = $client->get($url);
-        if ($response->isSuccessful()) {
-            $json = $response->json();
+        try{
 
-            return $json;
+            $response = $client->get($url);
+
+            if ($response->isSuccessful()) {
+                $json = $response->json();
+
+                return $json;
+            }
+
         }
-        else
+
+        catch(\Exception $e)
         {
-
-            /** @var Logger $logger*/
-            $logger = $this->container->get('logger');
-            $logger->addAlert('TimeOut');
-
+            throw new LocalException('E7');
         }
-        throw new LocalException('E7',true);
     }
 
     /**

@@ -10,10 +10,7 @@ namespace IntegratorBundle\Model;
 
 
 class Integrador extends AbstractResource{
-   
-    public function post()
-    {
 
-    }
+
 
 } 

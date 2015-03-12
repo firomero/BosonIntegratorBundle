@@ -1,6 +1,6 @@
 <?php
 
-namespace IntegratorBundle\Manager;
+namespace UCI\Boson\IntegratorBundle\Manager;
 use PlasmaConduit\DependencyGraph;
 use PlasmaConduit\dependencygraph\DependencyGraphNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
