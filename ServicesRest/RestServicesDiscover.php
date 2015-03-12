@@ -126,6 +126,7 @@ class RestServicesDiscover
                 $anotAttrRelac = $this->annotReader->getClassAnnotation($attr->getReflectionClass(), 'UCI\Boson\IntegratorBundle\Annotation\RestService');
 
                 if ($anotAttrRelac instanceof RestService) {
+                    $options['id'.$attrRelaciones['fieldName']] = $attr->name;
                    $rutas2= $this->buildRuta(
                                                 $anotAttrRelac,
                                                 $this->em->getClassMetadata($attrRelaciones['targetEntity']),
@@ -134,7 +135,7 @@ class RestServicesDiscover
                                                 '_' . $attrRelaciones['fieldName'],
                                                 '/' .$attrRelaciones['fieldName'].'/'.'{id'.$attrRelaciones['fieldName'].'}',
                                                 $anotAttrRelac->allow,
-                                                array('id'=>$entity->name,'id'.$attrRelaciones['fieldName'] =>$attr->name)
+                                                $options
                                             );
 
                     /*$rutas["restRoute_" . $arrayRutaNameRuta['routeName'] . '_' . $attrRelaciones['fieldName']] = array(

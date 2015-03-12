@@ -18,3 +18,6 @@ integrator:
         E6:
             mensaje: La direccion de configuracion no es accesible
             descripcion: Verifique que el archivo exista y tenga permisos de lectura-escritura
+        E7:
+            mensaje: La direccion de servidor no es accesible
+            descripcion: Verifique que el servidor de aplicaciones esté activo.

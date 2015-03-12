@@ -7,14 +7,12 @@ services:
 #    integrator.example:
 #        class: %integrator.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
-
-    integrator.manager:
-        class: IntegratorBundle\Manager\ServiceManager
-        arguments: ['@uci.boson.cache', %server.sensitive% ]
-    integrator.kernel:
-        class: IntegratorBundle\Manager\IntegratorKernel
-        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@service_container" ]
-
+#    integrator.manager:
+#        class: IntegratorBundle\Manager\ServiceManager
+#        arguments: ['@uci.boson.cache', %server.sensitive% ]
+#    integrator.kernel:
+#        class: IntegratorBundle\Manager\IntegratorKernel
+#        arguments: [ %server% , %client% ]
 
     integrator.service.rest:
         class: %integrator.services.rest.class%

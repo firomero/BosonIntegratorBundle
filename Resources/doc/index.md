@@ -24,8 +24,5 @@ Habilitar el bundle en el AppKernel
  ## ¿Cómo seguir?
  2. dependencias.md
  3. httpcodes.md
- 4. uris.md
- 5. seguridad.md
- 6. comandos.md
- 7. configuraciones.md
-
+ 4. configuraciones.md
+ 5. comandos.md

@@ -3,7 +3,7 @@
 namespace IntegratorBundle\Manager;
 use PlasmaConduit\DependencyGraph;
 use PlasmaConduit\dependencygraph\DependencyGraphNode;
-
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UCI\Boson\CacheBundle\Cache\Cache;
 use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
 
@@ -16,6 +16,8 @@ class ServiceManager {
     const GRAPH_DEPENDENCY_ID = "boson.integrator.graph";
     const COLECCTION_DEPENDENCY_ID = "boson.integrator.colecction";
     const DOMAIN_DEPENDENCY_TREE = "boson.integrator.domain.tree";
+    const DOMAIN_DEPENDENCY_CONECTED = "boson.integrator.domain.conected";
+    const DOMAIN_DEPENDENCY_UNRESOLVED = "boson.integrator.domain.unresolved";
 
     /**
      * @var bool
@@ -27,6 +29,10 @@ class ServiceManager {
      */
     protected $cache;
 
+
+
+    protected $eventDispatcher;
+
     public  function __construct(Cache $cache, $sensitive=false)
     {
         $this->sensitive = $sensitive;
@@ -34,6 +40,11 @@ class ServiceManager {
 
         $this->cache = $cache;
 
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->eventDispatcher = $dispatcher;
     }
     /**
      * Devuelve normalizada las representaciones de dependencias y servicios
@@ -129,6 +140,7 @@ class ServiceManager {
         $mapa = new DependencyGraph();
         $indice = $this->getIndiceServicio($recursos);
         $pivot = $indice-1;
+        $conected = array();
 
         while ($pivot>=0) {
             for ($i = $indice; $i < sizeof($recursos); $i++) {
@@ -137,17 +149,20 @@ class ServiceManager {
                     $nodoS = new DependencyGraphNode($recursos[$i]['uri']);
                     $mapa->addRoot($nodoD);
                     $mapa->addDependency($nodoD,$nodoS);
+                    array_push($conected,$recursos[$pivot]);
                 }
             }
             $pivot--;
         }
 
         $this->cache->save(self::GRAPH_DEPENDENCY_ID,$mapa);
+        $this->cache->save(self::DOMAIN_DEPENDENCY_UNRESOLVED,array_diff_assoc($recursos,$conected));
 
         return $mapa;
     }
 
     /**
+     * Dado una dependencia, devuelve el servicio que la solventa
      * @param $name
      * @return mixed|string
      * @throws \Exception
@@ -184,7 +199,7 @@ class ServiceManager {
      * Devuelve el índice de servicio
      * @return int|string
      */
-    protected  function getIndiceServicio($recursos=array())
+    public  function getIndiceServicio($recursos=array())
     {
        $index = -1;
         foreach ($recursos as $key => $recurso) {

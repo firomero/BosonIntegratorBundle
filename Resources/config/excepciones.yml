@@ -28,3 +28,6 @@ excepciones:
         E6:
             mensaje: integrator.excepciones.E6.mensaje
             descripcion: integrator.excepciones.E6.descripcion
+        E7:
+            mensaje: integrator.excepciones.E7.mensaje
+            descripcion: integrator.excepciones.E7.descripcion

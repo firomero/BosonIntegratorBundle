@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Yaml\Yaml;
+use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
+
 /**
  * @Route("/verb")
  */
@@ -25,6 +27,7 @@ class RestServiceController extends Controller
 
     public function apiRestAction()
     {
+        //throw new LocalException('E1');
         $server = $this->get('request')->server;
         $servicios = $this->get('integrator.service.rest')->getApi($server);
 
@@ -44,7 +47,8 @@ class RestServiceController extends Controller
 
         switch($method){
             case 'POST':{
-                return $this->get('integrator.service.verbs.rest')->createAction($request);
+
+                return $this->get('integrator.service.verbs.rest')->createAction($request,$rooute);
 
             }
             case 'GET': {
