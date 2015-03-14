@@ -1,21 +1,27 @@
 parameters:
-#    integrator.example.class: UCI\Boson\IntegratorBundle\Example
-
+     integrator.services.rest.class: UCI\Boson\IntegratorBundle\ServicesRest\RestServicesDiscover
+     integrator.services.rest.verbs.class: UCI\Boson\IntegratorBundle\ServicesRest\RestServicesVerbs
+     integrator.services.rest.route_loader: UCI\Boson\IntegratorBundle\Loader\RouteLoader
+     integrator.services.rest.controller: UCI\Boson\IntegratorBundle\Controller\RestServiceController
 services:
-#    integrator.example:
-#        class: %integrator.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
-     integrator.reader:
-         class: IntegratorBundle\Integrator\Configurator\XmlConfigurationReader
-         arguments: [ %deps%, %resolved% ]
-     integrator.writer:
-         class: IntegratorBundle\Integrator\Configurator\XmlConfiguratorWriter
-         arguments: [ %deps%, %resolved% ]
-     integrator.dependency.manager:
-         class: IntegratorBundle\Integrator\Manager\DependencyManager
-         arguments: [ @integrator.reader, @integrator.writer ]
-     integrator.resolved.manager:
-         class:  IntegratorBundle\Integrator\Manager\ResolvedManager
-         arguments: [ @integrator.reader, @integrator.writer ]
+    integrator.manager:
+        class: UCI\Boson\IntegratorBundle\Manager\ServiceManager
+        arguments: ['@uci.boson.cache', %server.sensitive% ]
+    integrator.kernel:
+        class: UCI\Boson\IntegratorBundle\Manager\IntegratorKernel
+        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@logger" ]
 
+    integrator.service.rest:
+        class: %integrator.services.rest.class%
+        arguments: ["@annotations.reader", "@doctrine.orm.entity_manager"]
+
+    integrator.service.verbs.rest:
+        class: %integrator.services.rest.verbs.class%
+        arguments: ["@doctrine.orm.entity_manager","@jms_serializer"]
+
+    integrator.service.route_loader:
+        class: %integrator.services.rest.route_loader%
+        arguments: [@integrator.service.rest]
+        tags:
+            - {name: routing.loader}
 

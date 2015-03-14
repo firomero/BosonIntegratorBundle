@@ -40,5 +40,10 @@ Las dependencias identificadas y agregadas deben seguir el siguiente esquema jso
              ]
    }
 
+
+   RFC 4627[rfc-4627.txt]
+   JsonSchema [jsonschema.txt]
+
+
    Los servicios son insensibles a cambios de capitalizacion, lo que significa que infoName es lo mismo que
    INFONAME  e INFOname.

@@ -32,6 +32,12 @@ class IntegratorExtension extends ExcepcionesExtension
         foreach($config as $configKey => $configVal) {
             $container->setParameter($configKey, $configVal);
         }
+        $server =  $config['server'] ;
+        $client =  $config['client'] ;
+        $sensitive =  $config['server']['sensitive'] ;
+        $container->setParameter('server', $server);
+        $container->setParameter('client', $client);
+        $container->setParameter('server.sensitive', $sensitive);
 
 
     }

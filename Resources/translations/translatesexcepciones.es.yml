@@ -2,4 +2,26 @@ integrator:
     excepciones:
         E1:
             mensaje: Hola este es menaje de la excepción  E1 de ejemplo con traslations
+<<<<<<< HEAD
             descripcion: Hola esto es una descripción de la excepción E1 de ejemplo con traslations
+=======
+            descripcion: Hola esto es una descripción de la excepción E1 de ejemplo con traslations
+        E2:
+            mensaje: Servicio no encontrado.
+            descripcion: EL servicio no pudo ser encontrado, regenere el mapa de servicios para su posterior búsqueda.
+        E3:
+            mensaje: El mapa de dependencias ha sido eliminar.
+            descripcion: El mapa de dependencias ha sido eliminado o no existe, espere a que se construya nuevamente.
+        E4:
+            mensaje: La URI no puede estar vacia.
+            descripcion: Es necesario que introduza una localizacion valida de la aplicacion que se requiera registrar.
+        E5:
+            mensaje: La URI no es valida.
+            descripcion: Verifique que la url introducida se corresponda con una uri valida.
+        E6:
+            mensaje: La direccion de configuracion no es accesible
+            descripcion: Verifique que el archivo exista y tenga permisos de lectura-escritura
+        E7:
+            mensaje: La direccion de servidor no es accesible
+            descripcion: Verifique que el servidor de aplicaciones esté activo.
+>>>>>>> FETCH_HEAD
