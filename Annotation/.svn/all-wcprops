@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/arq-ref-php/!svn/ver/324/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Annotation
+END
+RestServiceConsume.php
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/arq-ref-php/!svn/ver/323/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Annotation/RestServiceConsume.php
+END
+Dependency.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/arq-ref-php/!svn/ver/324/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Annotation/Dependency.php
+END
+RestService.php
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/arq-ref-php/!svn/ver/323/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Annotation/RestService.php
+END

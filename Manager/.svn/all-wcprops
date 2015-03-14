@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/arq-ref-php/!svn/ver/380/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Manager
+END
+IntegratorKernel.php
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/arq-ref-php/!svn/ver/380/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Manager/IntegratorKernel.php
+END
+ConfigurationManagerInteface.php
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/arq-ref-php/!svn/ver/331/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Manager/ConfigurationManagerInteface.php
+END
+YamlConfiguration.php
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/arq-ref-php/!svn/ver/331/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Manager/YamlConfiguration.php
+END
+ServiceManager.php
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/arq-ref-php/!svn/ver/380/Arq-ref-php/Raiz/Branches/Boson/src/UCI/Boson/IntegratorBundle/Manager/ServiceManager.php
+END

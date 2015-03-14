@@ -1,0 +1,5 @@
+integrator:
+    excepciones:
+        E1:
+            mensaje: Hello this the message of  example exception E1 with traslations service.
+            descripcion: Hello this the description of example exception E1 with traslations service.

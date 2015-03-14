@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<list>
+<dependency>
+    <id>1</id>
+    <name>boson/integrator</name>
+    <version>dev-master</version>
+    <uri>integrator</uri>
+</dependency>
+</list>
