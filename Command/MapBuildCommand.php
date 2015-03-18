@@ -46,7 +46,7 @@ EOT
 
         try {
 
-            $array = $kernel->CargarRecursos();
+            $array = $kernel->getRecursos();
             $kernel->buildMap();
         }
         catch(ClientException $guzzlex)
@@ -64,7 +64,7 @@ EOT
             $output->writeln(sprintf('Ha ocurrido un error grave en la recuperacion de las representaciones.'.$error->getMessage()));
         }
 
-        $output->writeln(sprintf('Las aplicaciones "%s" han sido agregadas.',var_export($array)));
+        $output->writeln(sprintf('Las aplicaciones %s han sido cacheadas.',var_export($array)));
     }
 
 
