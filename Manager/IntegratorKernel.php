@@ -4,6 +4,7 @@
 namespace UCI\Boson\IntegratorBundle\Manager;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Message\Response;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
@@ -16,6 +17,9 @@ use GuzzleHttp\Exception\ClientException;
  * @package IntegratorBundle\Manager
  */
 class IntegratorKernel {
+
+    const RESOURCE_SERVICE = 'services';
+    const RESOURCE_DEPENDENCY = 'dependency';
 
     /**
      * @var mixed $config
@@ -32,7 +36,26 @@ class IntegratorKernel {
     protected $eventDispatcher;
 
 
+    /**
+     * @var array
+     */
     protected $recursos;
+
+    /**
+     * @return array
+     */
+    public function getRecursos()
+    {
+        return $this->recursos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
 
     protected $logger ;
@@ -68,6 +91,11 @@ class IntegratorKernel {
     {
         $is_server = $this->config['server']['is_server'];
         $recursos = array();
+        $flatten = array(
+
+        );
+        $services = array();
+        $dependency = array();
         if ($is_server) {
 
             $applist = $this->config['server']['app_list'];
@@ -81,8 +109,15 @@ class IntegratorKernel {
             $this->eventDispatcher->dispatch(ClientEvents::POST_FETCH,$clientEvents);
 
         }
+        foreach ($recursos as $recurso) {
+            $services = array_merge($services,$recurso[self::RESOURCE_SERVICE] );
+            $dependency = array_merge($dependency,$recurso[self::RESOURCE_DEPENDENCY] );
 
-        return $recursos;
+        }
+
+        $flatten = array_merge($dependency,$services);
+
+        return $flatten;
     }
 
     /**
@@ -122,9 +157,12 @@ class IntegratorKernel {
         $client = new Client();
         try{
 
+            /**
+            * @var Response $response
+             */
             $response = $client->get($url);
 
-            if ($response->isSuccessful()) {
+            if ($response->getStatusCode()==200) {
                 $json = $response->json();
 
                 return $json;
