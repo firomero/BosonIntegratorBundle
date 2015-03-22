@@ -13,6 +13,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use JMS\Serializer\Serializer;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +24,12 @@ class RestServicesVerbs
 {
     private $em;
     private $jms;
-    private $formFactory;
-    function __construct(EntityManager $em, Serializer $jms)
+    private $trans;
+    function __construct(EntityManager $em, Serializer $jms, Translator $trans)
     {
         $this->em = $em;
         $this->jms = $jms;
+        $this->trans = $trans;
     }
 
     public function readAction(Request $request, $route)
@@ -189,9 +191,67 @@ class RestServicesVerbs
         }*/
     }
 
-    public function updateAction()
+    public function updateAction(Request $request, $route)
     {
+        $codigo = 200;
+        $message = '';
+        $parameters = $request->request->all();
+        //$parametersRuta = $request->attributes->get('_route_params');
 
+        $entidades = $route['options'];
+
+        $entidad = array_pop($entidades);
+        $cmMuchos = $this->em->getClassMetadata($entidad);
+        $columNameIdentifier = $cmMuchos->getSingleIdentifierFieldName();
+
+        $object = $this->em->getRepository($entidad)->find($parameters[$columNameIdentifier]);
+        if(!isset($object)){
+            /* No se encuentra el recurso se retorna un 404(Not found) */
+        }
+        $fielFields = $cmMuchos->reflFields;
+        $fieldRelations = $cmMuchos->associationMappings;
+        $fieldMappings = $cmMuchos->fieldMappings;
+        foreach ($parameters as $key =>$field) {
+            if($key == $columNameIdentifier){
+                continue;
+            }
+            /* pregunto si esta entre los reflected fields de la clase */
+            if($val = array_key_exists($key,$fielFields) !== false){
+
+                /* ahora pregunto si se encuentra entre los campos convencionales de la entidad */
+                if(array_key_exists($key,$fieldMappings)!== false)
+                {
+                    $method = 'set'.ucwords($key);
+                    $object->$method($field);
+                }
+                /* si no pregunto si esta entre los campos de relaciones */
+                else if(array_key_exists($key,$fieldRelations)!== false && $fieldRelations[$key]['mappedBy'] === null){
+                    $method = 'set'.ucwords($key);
+                    $fieldMetadata = $fieldRelations[$key];
+                    $parent = $this->em->getRepository($fieldMetadata['targetEntity'])->find($field);
+                    if($parent != null)
+                    {
+                        $object->$method($parent);
+                    }
+                    else
+                    {
+                        /* si no se encuentra el campo de relacion entre tablas
+                        especificado se devuelve un error */
+                        $messageResponse = $this->trans->trans('custom_messages.422PUT',array(),'http_codes');
+                        return new Response(sprintf($messageResponse,$key,strval($field)), 422);
+                    }
+                }
+            }
+        }
+        try{
+
+            $this->em->persist($object);
+            $this->em->flush();
+
+        }
+        catch(ORMException $ex){
+            return $ex->getMessage();
+        }
     }
 
     public function partialUpdateAction()

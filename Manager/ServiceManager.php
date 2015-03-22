@@ -6,6 +6,7 @@ use PlasmaConduit\dependencygraph\DependencyGraphNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UCI\Boson\CacheBundle\Cache\Cache;
 use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
+use UCI\Boson\IntegratorBundle\Model\IntegratorException;
 
 class ServiceManager {
 
@@ -18,6 +19,7 @@ class ServiceManager {
     const DOMAIN_DEPENDENCY_TREE = "boson.integrator.domain.tree";
     const DOMAIN_DEPENDENCY_CONECTED = "boson.integrator.domain.conected";
     const DOMAIN_DEPENDENCY_UNRESOLVED = "boson.integrator.domain.unresolved";
+
 
     /**
      * @var bool
@@ -48,6 +50,7 @@ class ServiceManager {
     }
     /**
      * Devuelve normalizada las representaciones de dependencias y servicios
+     * @deprecate will removed next version
      * @param string $json
      * @return array
      */
@@ -69,6 +72,17 @@ class ServiceManager {
         $this->sortBy(self::INDEX_SEARCH_TYPE,$resources);
 
         $this->cache->save(self::COLECCTION_DEPENDENCY_ID,$resources);
+
+        $domains = array();
+
+        foreach($resources as $resource)
+        {
+            if (!in_array($resource[self::INDEX_SEARCH_DOMAIN],$domains)) {
+                array_push($domains,$resource[self::INDEX_SEARCH_DOMAIN]);
+            }
+        }
+
+        $this->cache->save(self::DOMAIN_DEPENDENCY_TREE,$domains);
 
         return $resources;
     }
@@ -100,7 +114,9 @@ class ServiceManager {
      */
     public function buildDependecyGraph(array $recursos)
     {
+
         return $this->initGraph($recursos);
+
 
     }
 
@@ -156,7 +172,22 @@ class ServiceManager {
         }
 
         $this->cache->save(self::GRAPH_DEPENDENCY_ID,$mapa);
-        $this->cache->save(self::DOMAIN_DEPENDENCY_UNRESOLVED,array_diff_assoc($recursos,$conected));
+
+        $this->cache->save(self::DOMAIN_DEPENDENCY_CONECTED,$conected);
+
+        $this->cache->save(self::COLECCTION_DEPENDENCY_ID,$recursos);
+
+        $domains = array();
+
+        foreach($recursos as $resource)
+        {
+            if (!in_array($resource[self::INDEX_SEARCH_DOMAIN],$domains)) {
+                array_push($domains,$resource[self::INDEX_SEARCH_DOMAIN]);
+            }
+        }
+
+        $this->cache->save(self::DOMAIN_DEPENDENCY_TREE,$domains);
+
 
         return $mapa;
     }
@@ -171,6 +202,15 @@ class ServiceManager {
     {
         $uri = '';
         $doMatch = false;
+
+        $domains = $this->fetchDomains();
+
+        $collect = $this->Collect($name);
+
+        if (!in_array($name['domain'],$domains)) {
+            throw new IntegratorException('E3');
+        }
+
         if ($this->cache->contains($this::GRAPH_DEPENDENCY_ID)) {
             $mapa = $this->cache->fetch($this::GRAPH_DEPENDENCY_ID);
             /**
@@ -178,22 +218,38 @@ class ServiceManager {
              * */
 
             $mapaArray = $this->Normalize($mapa->toArray());
+            $found = false;
 
-            do{
-                $uri = current($mapaArray[$name['name'].':'.$name['domain']]);
-                $doMatch = $this->doMatch($name);
-            }while(empty($uri)&&$doMatch==true);
+            //TODO Validar las llaves de dominio al menos, si no existe del dominio no se busca
+            while(''==$uri&&$doMatch==false){
+
+                if (array_key_exists($name['name'].':'.$name['domain'],$mapaArray)) {
+                    $current = $mapaArray[$name['name'].':'.$name['domain']];
+
+                    $uri = current($current);
+                }
+                else
+                {
+                    $doMatch = $this->doMatch($collect);
+                    if (!$doMatch) {
+                        $doMatch = true;
+                    }
+
+                }
+
+
+            };
         }
         else
         {
-            throw new LocalException('E3');
+            throw new IntegratorException('E3');
         }
 
         return $uri;
 
     }
 
-    /*********************************************PROTECTED**************************************************/
+
 
     /**
      * Devuelve el índice de servicio
@@ -213,6 +269,17 @@ class ServiceManager {
 
         return $index;
     }
+
+    /**
+     * @return bool
+     */
+    public function isNew()
+    {
+        return $this->cache->contains($this::GRAPH_DEPENDENCY_ID)==false;
+    }
+
+
+    /*********************************************PROTECTED**************************************************/
 
     /**
      * Ordena una coleccion por una funcion de comparacion
@@ -247,7 +314,7 @@ class ServiceManager {
      * @param $servicio
      * @return bool
      */
-    public function Conectar($dependencia, $servicio)
+    protected  function Conectar($dependencia, $servicio)
     {
         $conected = false;
         $testConnected = false;
@@ -319,6 +386,64 @@ class ServiceManager {
 
         return $hash;
     }
+
+
+    /**
+     * Devuelve los dominios registrados
+     * @return array|bool|string
+     */
+    protected function fetchDomains()
+    {
+        $domains = array();
+
+        if ($this->cache->contains($this::DOMAIN_DEPENDENCY_TREE)) {
+             $domains = $this->cache->fetch($this::DOMAIN_DEPENDENCY_TREE);
+        }
+        elseif ($this->cache->contains($this::COLECCTION_DEPENDENCY_ID)) {
+
+            $resources = $this->cache->fetch($this::COLECCTION_DEPENDENCY_ID);
+
+            foreach( $resources as $resource)
+            {
+                if (!in_array($resource[self::INDEX_SEARCH_DOMAIN],$domains)) {
+                    array_push($domains,$resource[self::INDEX_SEARCH_DOMAIN]);
+                }
+            }
+        }
+
+        return $domains;
+
+
+
+    }
+
+    /**
+     * Devuelve la colección de dependencias completo
+     * @param $name
+     * @return mixed
+     */
+    protected function Collect($name)
+    {
+        $dependencia = $name;
+        if ($this->cache->contains(self::COLECCTION_DEPENDENCY_ID)) {
+            $recursos = $this->cache->fetch(self::COLECCTION_DEPENDENCY_ID);
+            $index = $this->getIndiceServicio($recursos);
+
+            for($i = 0; $i<$index; $i++)
+            {
+                if ($recursos[$i]['domain']==$name['domain'] ) {
+                    if ($recursos[$i]['name']==$name['name']) {
+                        $dependencia = $recursos[$i];
+                        return $dependencia;
+                    }
+                }
+            }
+        }
+
+
+        return $dependencia;
+    }
+
 
 
 

@@ -11,6 +11,7 @@ namespace UCI\Boson\IntegratorBundle\Model;
 
 use Symfony\Component\DependencyInjection\Container;
 use UCI\Boson\IntegratorBundle\Annotation\RestService;
+use UCI\Boson\IntegratorBundle\Manager\IntegratorKernel;
 
 /**
 * @RestService(name="recurso",domain="integrador",allow={"GET"})
@@ -18,6 +19,14 @@ use UCI\Boson\IntegratorBundle\Annotation\RestService;
 class Recurso extends AbstractResource{
 
     protected $integratorKernel;
+
+    /**
+     * @param IntegratorKernel $integratorKernel
+     */
+    public function setIntegratorKernel($integratorKernel)
+    {
+        $this->integratorKernel = $integratorKernel;
+    }
 
     /**
      * @var
@@ -56,11 +65,9 @@ class Recurso extends AbstractResource{
 
     protected $serviceContainer;
 
-    public function __construct(Container $container)
+    public function __construct(IntegratorKernel $integratorKernel)
     {
-        $this->serviceContainer = $container;
-
-        $this->integratorKernel = $container->get('integrator.kernel');
+        $this->integratorKernel = $integratorKernel;
     }
 
     /**
@@ -189,6 +196,8 @@ class Recurso extends AbstractResource{
         return null;
 
     }
+
+
 
 
 }

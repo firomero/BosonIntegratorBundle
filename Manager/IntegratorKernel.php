@@ -11,6 +11,7 @@ use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
 use UCI\Boson\IntegratorBundle\Events\ClientEvents;
 use UCI\Boson\IntegratorBundle\Events\GetClientEvents;
 use GuzzleHttp\Exception\ClientException;
+use UCI\Boson\IntegratorBundle\Events\RetrieveSuscriber;
 
 /**
  * Class IntegratorKernel
@@ -77,9 +78,14 @@ class IntegratorKernel {
 
         $this->eventDispatcher = $dispatcher;
 
+        $suscriber = new RetrieveSuscriber();
+
+        $this->eventDispatcher->addSubscriber($suscriber);
+
         $this->recursos = $this->CargarRecursos();
 
         $this->logger = $logger;
+
     }
 
 
@@ -184,7 +190,22 @@ class IntegratorKernel {
      */
     public function getURI($dependencia)
     {
-        return $this->serviceManager->getServicio($dependencia);
+
+        $clientEvents = new GetClientEvents($this);
+        $this->eventDispatcher->dispatch(ClientEvents::PRE_RETRIEVE,$clientEvents);
+        $uri =  $this->serviceManager->getServicio($dependencia);
+        $this->eventDispatcher->dispatch(ClientEvents::POST_RETRIEVE,$clientEvents);
+        return $uri;
+    }
+
+
+    /**
+     * Retorna si el service manager está vacío
+     * @return bool
+     */
+    public function isNew()
+    {
+        return $this->serviceManager->isNew();
     }
 
 

@@ -43,7 +43,10 @@ class RestServicesDiscover
             if ($anot instanceof RestService) {
                 $properties = array();
                 $id = $entity->identifier;
-                $properties[$id[0]] = 'integer';
+
+                if (isset($id[0])) {
+                    $properties[$id[0]] = 'integer';
+                }
 
                 foreach ($entity->fieldMappings as $field) {
                     $properties[$field['fieldName']] = $field['type'];
@@ -67,7 +70,10 @@ class RestServicesDiscover
             } else if ($anot instanceof RestServiceConsume) {
                 $properties = array();
                 $id = $entity->identifier;
-                $properties[$id[0]] = 'integer';
+
+                if (isset($id[0])) {
+                    $properties[$id[0]] = 'integer';
+                }
 
                 foreach ($entity->fieldMappings as $field) {
                     $properties[$field['fieldName']] = $field['type'];
@@ -92,7 +98,6 @@ class RestServicesDiscover
 
     public function getRutas()
     {
-
         $AllEntities = $this->fetchMetadata();
 
         $rutas = array();

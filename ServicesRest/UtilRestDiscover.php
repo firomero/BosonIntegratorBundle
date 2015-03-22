@@ -41,6 +41,29 @@ trait UtilRestDiscover {
 }
 
     /**
+     * Devuelve los metadatos para una clase en espec'ifico
+     * @param $entity
+     * @return array
+     */
+    public function getRestMetadataFor($entity)
+{
+    $model = __DIR__.'/../Model';
+
+    $fileLocator = new FileLocator(array($model));
+    $class = $fileLocator->findFileClass(new \ReflectionClass($entity),'php');
+
+
+    $reader = new AnnotationReader();
+    $driver = new AnnotationDriver($reader);
+    $metadatos = array();
+
+        array_push($metadatos,$driver->loadMetadataForClass($this->getClassFromFile($class)));
+
+
+    return $metadatos;
+}
+
+    /**
      * Obtiene el nombre de la Clase
      * @param \SplFileInfo $file
      * @return \ReflectionClass
