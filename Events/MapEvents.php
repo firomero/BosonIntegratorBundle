@@ -7,6 +7,7 @@
  */
 namespace UCI\Boson\IntegratorBundle\Events;
 /**
+ * Definicion de los eventos de la construccion del mapa
  * Class MapEvents
  * @package UCI\Boson\IntegratorBundle\Events
  */

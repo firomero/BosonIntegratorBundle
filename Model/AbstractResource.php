@@ -7,15 +7,22 @@
  */
 
 namespace UCI\Boson\IntegratorBundle\Model;
+use Symfony\Component\DependencyInjection\Container;
 
 
 /**
+ * Clase abstracta que permite que algo se comporte como recurso rest.
  * Class AbstractResource
  * @package IntegratorBundle\Model
  */
 abstract class AbstractResource {
 
 
+    protected $container;
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
     /**
      * Devuelve un Recurso dado un identificador
      * @param $id

@@ -12,6 +12,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Composer\Script\CommandEvent;
 /**
+ * Este componente s eencarga de las tareas de post-instalacion
  * @author Felix Ivan Romero Rodríguez <firomero@uci.cu>
  */
 
@@ -29,40 +30,43 @@ public static function buildResourceDir(CommandEvent $commandEvent)
 
         return;
     }
-    static::executeBuildResourceDir($webDir);
+
 }
 
-    public static function buildDefinitionSchema(CommandEvent $commandEvent)
-    {
-        $options = self::getOptions($commandEvent);
-        $webDir = $options['symfony-web-dir'];
-        if (!is_dir($webDir)) {
-            echo 'La symfony-web-dir ('.$webDir.') especificada in composer.json no fue hallada  en '.getcwd().PHP_EOL;
+    /**
+     * @param CommandEvent $commandEvent
+     */
+    public  static function buildMap(CommandEvent $event)
+{
+    $options = self::getOptions($event);
+    $appDir = $options['symfony-app-dir'];
 
-            return;
+    if (!is_dir($appDir)) {
+        echo 'The symfony-app-dir ('.$appDir.') specified in composer.json was not found in '.getcwd().', can not clear the cache.'.PHP_EOL;
+
+        return;
+    }
+    static::executeCommand($event, $appDir, 'integrator:map:build', $options['process-timeout']);
+
+}
+
+    protected static function executeCommand(CommandEvent $event, $appDir, $cmd, $timeout = 300)
+    {
+        $php = escapeshellarg(self::getPhp());
+        $console = escapeshellarg($appDir.'/console');
+        if ($event->getIO()->isDecorated()) {
+            $console .= ' --ansi';
         }
 
-        static::executeDefinitionSchema($webDir);
-    }
-
-    protected static function executeDefinitionSchema($webDir)
-    {
-        if (file_exists(__DIR__.'/definition.json')) {
-            copy(__DIR__.'/definition.json',$webDir.'/definition.json');
-        }
-    }
-
-    protected static function executeBuildResourceDir($webDir, $timeout = 300)
-    {
-        $webDir = escapeshellarg($webDir);
-        $command= sprintf("mkdir %s/definition",$webDir);
-
-        $process = new Process($command,$timeout);
+        $process = new Process($php.' '.$console.' '.$cmd, null, null, null, $timeout);
         $process->run(function ($type, $buffer) { echo $buffer; });
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException('Ha ocurrido un error creando el directorio de  definiciones.');
+            throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', escapeshellarg($cmd)));
         }
     }
+
+
+
 
     /**
      * @param CommandEvent $event

@@ -12,6 +12,11 @@ namespace UCI\Boson\IntegratorBundle\Events;
 use PlasmaConduit\DependencyGraph;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Encapsula los objetos a tratar al lanzarse un evento
+ * Class GetMapEvents
+ * @package UCI\Boson\IntegratorBundle\Events
+ */
 class GetMapEvents extends Event{
 
     protected $dependencyGraph;

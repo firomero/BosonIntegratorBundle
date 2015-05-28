@@ -12,6 +12,11 @@ namespace UCI\Boson\IntegratorBundle\ServicesRest;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * Encuentra si una entidad es de doctrine
+ * Class EntityDiscover
+ * @package UCI\Boson\IntegratorBundle\ServicesRest
+ */
 trait EntityDiscover {
     /**
      * @param EntityManager $em

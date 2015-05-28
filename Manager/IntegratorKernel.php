@@ -7,13 +7,14 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
+use Symfony\Component\Translation\Translator;
 use UCI\Boson\IntegratorBundle\Events\ClientEvents;
 use UCI\Boson\IntegratorBundle\Events\GetClientEvents;
-use GuzzleHttp\Exception\ClientException;
 use UCI\Boson\IntegratorBundle\Events\RetrieveSuscriber;
+use UCI\Boson\IntegratorBundle\Exception\IntegratorException;
 
 /**
+ * Fachada
  * Class IntegratorKernel
  * @package IntegratorBundle\Manager
  */
@@ -43,6 +44,11 @@ class IntegratorKernel {
     protected $recursos;
 
     /**
+     * @var Translator
+     */
+    private  $translator;
+
+    /**
      * @return array
      */
     public function getRecursos()
@@ -65,7 +71,7 @@ class IntegratorKernel {
      * @param $server
      * @param $client
      */
-    public function __construct($server, $client,ServiceManager $serviceManager, EventDispatcherInterface $dispatcher, Logger $logger )
+    public function __construct($server, $client,ServiceManager $serviceManager, EventDispatcherInterface $dispatcher, Logger $logger,Translator $translator )
     {
 
         $this->config['server']=$server;
@@ -82,9 +88,19 @@ class IntegratorKernel {
 
         $this->eventDispatcher->addSubscriber($suscriber);
 
-        $this->recursos = $this->CargarRecursos();
-
         $this->logger = $logger;
+
+        $this->translator = $translator;
+        try{
+
+            $this->recursos = $this->CargarRecursos();
+        }
+        catch(\Exception $e)
+        {
+            $this->logger->addCritical($e->getMessage());
+        }
+
+
 
     }
 
@@ -132,7 +148,7 @@ class IntegratorKernel {
     public function buildMap()
     {
 
-        $this->serviceManager->buildDependecyGraph($this->recursos);
+        $this->serviceManager->buildDependecyGraph($this->recursos==null?array():$this->recursos);
     }
 
     /**
@@ -140,7 +156,7 @@ class IntegratorKernel {
      * @param $domain
      * @param $name
      * @return mixed|string
-     * @throws \UCI\Boson\ExcepcionesBundle\Exception\LocalException
+     * @throws IntegratorException
      */
     public function findService($domain,$name)
     {
@@ -155,7 +171,7 @@ class IntegratorKernel {
     /**
      * Obtiene los servicios y dependendencias de una aplicacion
      * @param $url
-     * @throws LocalException
+     * @throws \Exception
      * @return mixed
      */
     public function Representaciones($url)
@@ -178,7 +194,8 @@ class IntegratorKernel {
 
         catch(\Exception $e)
         {
-            throw new LocalException('E7');
+
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -186,11 +203,12 @@ class IntegratorKernel {
      * Retorna la url del servicio solicitado
      * @param $dependencia
      * @return mixed|string
-     * @throws \UCI\Boson\ExcepcionesBundle\Exception\LocalException
+     * @throws \Exception
      */
     public function getURI($dependencia)
     {
 
+       $dependencia[ServiceManager::INDEX_SEARCH_TYPE]='dependencia';
         $clientEvents = new GetClientEvents($this);
         $this->eventDispatcher->dispatch(ClientEvents::PRE_RETRIEVE,$clientEvents);
         $uri =  $this->serviceManager->getServicio($dependencia);

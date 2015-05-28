@@ -11,10 +11,12 @@ namespace UCI\Boson\IntegratorBundle\ServicesRest;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use JMS\Serializer\Serializer;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use UCI\Boson\IntegratorBundle\Annotation\RestService;
 use UCI\Boson\IntegratorBundle\Manager\IntegratorKernel;
 use UCI\Boson\IntegratorBundle\Metadata\ClassMetadata;
+use UCI\Boson\IntegratorBundle\Model\AbstractResource;
 use UCI\Boson\IntegratorBundle\Model\IntegratorException;
 use UCI\Boson\IntegratorBundle\Model\Recurso;
 use UCI\Boson\IntegratorBundle\Model\Service;
@@ -37,12 +39,18 @@ class RestResolverVerbs {
         $this->jms = $jms;
     }
 
-    public function readAction(Request $request, array $route)
+    public function readAction(Request $request, array $route, $container)
     {
 
         $entidades = $route['options'];
         $entidad = $entidades['id'];
-        $classMetadata = $this->getRestMetadataFor($entidad);
+        $parts = explode('Model',$entidad);
+        /**
+        * @var Container $container
+         */
+        $appDir = $container->getParameter('kernel.root_dir');
+        $this->getModels($container);
+        $classMetadata = $this->getRestMetadataFor($entidad, array(current($parts).'Model'),$appDir);
         $classMetadata = current($classMetadata);
         $reader = new AnnotationReader();
         $dataResult = array();
@@ -52,11 +60,15 @@ class RestResolverVerbs {
         $anotations = $reader->getClassAnnotation($classMetadata->getReflectionClass(),'UCI\Boson\IntegratorBundle\Annotation\Interfaces\ServiceAnnotationInterface');
         if ($anotations instanceof RestService) {
 
-            $servicio = new Service($this->integratorKernel);
+           $class = $classMetadata->getReflectionClass()->getName();
+
+
 
             $name = $request->query->get('name');
             $domain = $request->query->get('domain');
-            $uri = '';
+            $result = '';
+
+
 
             if (!is_null($name)&&!is_null($domain)) {
                 $key = array(
@@ -64,24 +76,47 @@ class RestResolverVerbs {
                     'domain'=>$domain,
                 );
 
+                $servicio = new $class($container);
+
                 try {
-                    $uri = $servicio->get($key);
+                    /**
+                     * @var Recurso $servicio
+                     */
+                    $result = $servicio->get($key);
                 }
-                catch(IntegratorException $e)
+                catch(\Exception $e)
                 {
-                    $dataResult['code']=HttpCode::HTTP_SERVER_ERROR;
+                    $dataResult[0]=array();
+                    $dataResult[1]=HttpCode::HTTP_SERVER_ERROR;
+
                     return $dataResult;
                 }
 
+                $dataResult[0]=$result;
+                $dataResult[1]=HttpCode::HTTP_OK;
+                if ($result=='') {
+                    $dataResult[1]=HttpCode::HTTP_RESOURCE_NOTFOUND;
+                }
+
             }
-            $dataResult['code']=HttpCode::HTTP_OK;
+            else
+            {
 
-            if ($uri=='') {
-                $dataResult['code']=HttpCode::HTTP_RESOURCE_NOTFOUND;
+                /**
+                 * @var AbstractResource $servicio
+                 */
+                $servicio = new $class($container);
+                $dataResult[0] = $servicio->get($request);
+                $dataResult[1]=HttpCode::HTTP_OK;
+
+
+                if (is_null($dataResult[1])) {
+                    $dataResult[1]=array();
+                    $dataResult[1]=HttpCode::HTTP_RESOURCE_NOTFOUND;
+                }
+
+
             }
-
-            $dataResult['uri']=$uri;
-
         }
         return $dataResult;
 

@@ -1,3 +1,3 @@
 integrator:
-    server: { is_server: true, app_list: ['http://localhost/app1/api/rest', 'http://localhost/app2/api/rest', 'http://localhost/app3/api/rest', 'http://my.app/uci'], sensitive: false }
-    client: { server: 'http://localhost/appserver/api/rest' }
+    server: { is_server: true, app_list: ['http://127.0.0.1:8888/app_dev.php/api/'] }
+    client: { server: 'http://127.0.0.1:8888/app.php/api/' }

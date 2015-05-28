@@ -90,7 +90,6 @@ class GuzzTest extends \PHPUnit_Framework_TestCase{
         }
         $key = array_key_exists('dependencias',$arrayResult);
 
-        var_export($arrayResult);
 
         $this->assertTrue($key);
     }

@@ -12,8 +12,12 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
 
+/**
+ * Esta clase tiene la responsabilidad de introducir aplicaciones en el entorno.
+ * Class AddAplicationCommand
+ * @package UCI\Boson\IntegratorBundle\Command
+ */
 class AddAplicationCommand extends ContainerAwareCommand{
 
     const PATTERN = '~^
@@ -57,7 +61,7 @@ EOT
     {
         $uri = $input->getArgument('uri');
         $file = __DIR__.'/../Resources/config/integrator.yml';
-        $yml = new YamlConfiguration();
+        $yml = new YamlConfiguration($this->getContainer()->get("translator"));
         $configs = $yml->fileAsArray($file);
         array_push($configs['integrator']['server']['app_list'],$uri);
         $yml->arrayAsFile($configs,$file);
@@ -75,13 +79,16 @@ EOT
                 'Introduzca la uri de la aplicacion: ',
                 function($uri) {
                     if (empty($uri)) {
-                        throw new LocalException('E4');
+                        throw new \Exception('malformed.uri');
                     }
                     $pattern = '/^(http|ftp|https)\:\/\/+[a-z0-9\.\_-]+$/i';
                     $pattern = '/^(http|ftp|https)\:\/\/+[a-z0-9\.*\_-]+\[/[a-z0-9\.\_-]]*$/i';
 
                     if (!preg_match($pattern,$uri)) {
-                        throw new LocalException('E5');
+                        $translator = $this->getContainer()->get('translator');
+                        $messageE5 =$translator->trans('integrator.excepciones.E5.mensaje', array(), 'translatesexcepciones');
+                        throw new IntegratorException($messageE5);
+
                     }
 
 

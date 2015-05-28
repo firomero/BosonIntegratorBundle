@@ -3,6 +3,7 @@ parameters:
      integrator.services.rest.verbs.class: UCI\Boson\IntegratorBundle\ServicesRest\RestServicesVerbs
      integrator.services.rest.route_loader: UCI\Boson\IntegratorBundle\Loader\RouteLoader
      integrator.services.rest.controller: UCI\Boson\IntegratorBundle\Controller\RestServiceController
+     integrator.service.yamlconfiguration.class: UCI\Boson\IntegratorBundle\Manager\YamlConfiguration
 services:
 #    integrator.example:
 #        class: %integrator.example.class%
@@ -10,22 +11,44 @@ services:
 
     integrator.manager:
         class: UCI\Boson\IntegratorBundle\Manager\ServiceManager
-        arguments: ['@uci.boson.cache', %server.sensitive% ]
+        arguments: ['@integrator.cache']
     integrator.kernel:
         class: UCI\Boson\IntegratorBundle\Manager\IntegratorKernel
-        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@logger" ]
+        arguments: [ %server% , %client%, @integrator.manager,"@event_dispatcher","@logger","@translator" ]
+
+    integrator.map.suscriber:
+        class: UCI\Boson\IntegratorBundle\Events\RetrieveSuscriber
+        tag:
+            - { name: 'kernel.event_subscriber'}
+
+    integrator.security.listener:
+         class: UCI\Boson\IntegratorBundle\Events\IntegratorListener
+         tags:
+             - {name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    integrator.service.model.rest:
+        class: UCI\Boson\IntegratorBundle\ServicesRest\RestResolverVerbs
+        arguments: [ "@integrator.kernel" , "@jms_serializer"]
 
 
     integrator.service.rest:
         class: %integrator.services.rest.class%
-        arguments: ["@annotations.reader", "@doctrine.orm.entity_manager"]
+        arguments: ["@service_container"]
 
     integrator.service.verbs.rest:
         class: %integrator.services.rest.verbs.class%
-        arguments: ["@doctrine.orm.entity_manager","@jms_serializer"]
+        arguments: ["@doctrine.orm.entity_manager","@jms_serializer","@translator","@annotations.reader","@integrator.service.rest"]
 
     integrator.service.route_loader:
         class: %integrator.services.rest.route_loader%
-        arguments: [@integrator.service.rest]
+        arguments: [@integrator.service.rest,@service_container]
         tags:
             - {name: routing.loader}
+
+    integrator.service.yamlconfiguration:
+        class: %integrator.service.yamlconfiguration.class%
+        arguments: ["@translator"]
+
+    integrator.cache:
+        class: UCI\Boson\IntegratorBundle\Manager\IntegratorCache

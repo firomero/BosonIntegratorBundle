@@ -9,6 +9,11 @@
 namespace UCI\Boson\IntegratorBundle\ServicesRest;
 
 
+/**
+ * Definicion de los content-type aceptados
+ * Class ContentEncoder
+ * @package UCI\Boson\IntegratorBundle\ServicesRest
+ */
 class ContentEncoder {
 
     /**
@@ -27,4 +32,7 @@ class ContentEncoder {
      *
      */
     const YAML_ENCODER = 'yaml';
-} 
+
+
+    const HTML_ENCODER = 'html';
+}

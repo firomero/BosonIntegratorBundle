@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: root
+ * User: dacasals
  * Date: 28/01/15
  * Time: 15:59
  */
@@ -22,7 +22,7 @@ use UCI\Boson\IntegratorBundle\Annotation\Interfaces\ServiceAnnotationInterface;
  *   @Attribute("allow",  type = "array<string>")
  * })
  *
- * Class RestServiceAnotation
+ * Class RestService. Anotación para etiquetar entidades como recursos  a ser brindados.
  *
  * @author Daniel Arturo Casals Amat<dacasals@uci.cu>
  * @package UCI\Boson\IntegratorBundle\Annotation
@@ -39,6 +39,12 @@ class RestService  implements ServiceAnnotationInterface {
 
     public $optional = true;
 
+    /**
+     * Constructor de la clase, se restringen los valores permitidos para el atributo allow.
+     *
+     * @param $values array Arreglo de valores definidos como atributos de la clase.
+     * @throws AnnotationException
+     */
     function __construct( $values )
     {
         $arrayPermitidos = array("PUT","GET","POST","PATCH","DELETE");
@@ -57,14 +63,4 @@ class RestService  implements ServiceAnnotationInterface {
             else throw  AnnotationException::creationError("El atributo ".$key." no está definido para anotaciones de tipo RestService, verifique los atributos permitidos para esta anotación");
         }
     }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getEditable()
-//    {
-//        if( count ($this->allow) == 1 && $this->allow[0] == "GET" )
-//             $this->editable = false;
-//        return $this->editable;
-//    }
 }

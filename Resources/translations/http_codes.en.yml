@@ -1,0 +1,12 @@
+codes:
+
+custom_messages:
+    404PUT: The requested resource with identifier %s does not exist
+    422PUT: There is no input parameter %s with the identifier %s
+    200Delete: The resource was deleted successfully
+    idParamNotFound: The identification parameter %s is not in the request.
+    404GET: The requested resource does not exist
+    500NOTNULFieldPOST: $the field %s can't be null in the request.
+    201POST: The resources was created successfully.
+    400GETDate: The date format not is valid.
+    400GETInteger: Once of the search parameters must be integer but get %s.

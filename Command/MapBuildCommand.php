@@ -14,8 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
+use UCI\Boson\IntegratorBundle\Exception\IntegratorException;
 
+/**
+ * Esta clase se encarga de cachear el mapa de conexiones entre servicios y dependencias.
+ * Class MapBuildCommand
+ * @package UCI\Boson\IntegratorBundle\Command
+ */
 class MapBuildCommand extends ContainerAwareCommand {
 
     /**
@@ -54,17 +59,12 @@ EOT
             $container->get('logger')->addCritical('Error de conectividad '.$guzzlex->getMessage());
             $output->writeln(sprintf('Excepcion de cliente de conexion:'.$guzzlex->getMessage()));
         }
-        catch(LocalException $local)
-        {
-            $container->get('logger')->addCritical('Hay aplicaciones que no pudieron ser cargadas '.$local->getMensaje());
-            $output->writeln(sprintf($local->getMensaje()));
-        }
         catch(\Exception $error)
         {
             $output->writeln(sprintf('Ha ocurrido un error grave en la recuperacion de las representaciones.'.$error->getMessage()));
         }
 
-        $output->writeln(sprintf('Las aplicaciones %s han sido cacheadas.',var_export($array)));
+        $output->writeln(sprintf('Las aplicaciones  han sido cacheadas.'));
     }
 
 

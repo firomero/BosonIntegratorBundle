@@ -20,6 +20,13 @@ class Recurso extends AbstractResource{
 
     protected $integratorKernel;
 
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->integratorKernel = $container->get('integrator.kernel');
+    }
+
     /**
      * @param IntegratorKernel $integratorKernel
      */
@@ -65,10 +72,7 @@ class Recurso extends AbstractResource{
 
     protected $serviceContainer;
 
-    public function __construct(IntegratorKernel $integratorKernel)
-    {
-        $this->integratorKernel = $integratorKernel;
-    }
+
 
     /**
      * @return mixed

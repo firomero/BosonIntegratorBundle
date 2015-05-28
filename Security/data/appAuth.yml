@@ -1,0 +1,3 @@
+application:
+    app1: { host: localhost, port: 8888, remote: 127.0.0.1, ttl: '45216546524', key: fjsfafhadfhadf435445645jdbsbdhsbdh354345454bhbdfh }
+    asasasas: { host: asasasas, port: asasassas, ttl: '2121212', remote: asasasas, key: 14fdaea584b9030cc29a3e27950af88480981a65bd2bc3c689b96584b67b7b955ad715ea12b1c27d7a4732ace38add3c428cfc8dd991e16cecf3f4666c2a3cef }

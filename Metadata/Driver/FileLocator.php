@@ -5,15 +5,29 @@ namespace UCI\Boson\IntegratorBundle\Metadata\Driver;
 use Metadata\Driver\AdvancedFileLocatorInterface;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Interfaz para el trabajo con ficheros
+ * Class FileLocator
+ * @package UCI\Boson\IntegratorBundle\Metadata\Driver
+ */
 class FileLocator implements AdvancedFileLocatorInterface
 {
+    /**
+     * @var array
+     */
     private $dirs;
 
+    /**
+     * @param array $dirs
+     */
     public function __construct(array $dirs)
     {
         $this->dirs = $dirs;
     }
 
+    /**
+     * @return array
+     */
     public function getDirs()
     {
         return $this->dirs;
@@ -68,4 +82,32 @@ class FileLocator implements AdvancedFileLocatorInterface
 
         return iterator_to_array($files);
     }
+
+    /**
+     * @param \ReflectionClass $class
+     * @param string           $extension
+     *
+     * @return \SplFileInfo
+     */
+    public function findFileClass(\ReflectionClass $class, $extension)
+    {
+             $dir = $this->dirs;
+
+             $finder = Finder::create();
+
+            $files = $finder->files()->in($dir)->name(sprintf('%s.%s', $class->getShortName(), $extension));
+
+            if (count($files) !== 1) {
+                return null;
+            }
+
+            $file = current(iterator_to_array($files));
+
+            return $file;
+
+
+
+    }
+
+
 }

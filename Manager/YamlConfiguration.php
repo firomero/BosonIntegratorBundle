@@ -7,16 +7,28 @@
  */
 
 namespace UCI\Boson\IntegratorBundle\Manager;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
-use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
+use UCI\Boson\IntegratorBundle\Exception\IntegratorException;
 
+/**
+ * Lector de configuracion yml
+ * Class YamlConfiguration
+ * @package UCI\Boson\IntegratorBundle\Manager
+ */
 class YamlConfiguration implements  ConfigurationManagerInteface{
+
+    private  $translator;
+    function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
 
 
     /**
      * Este metodo es el que carga un contenido desde la fuente de quien la implemente y devuelve una coleccion con sus valores.
      * @param null $file
-     * @throws LocalException
+     * @throws IntegratorException
      * @return mixed
      */
     public function fileAsArray($file=null)
@@ -25,11 +37,12 @@ class YamlConfiguration implements  ConfigurationManagerInteface{
             $data = Yaml::parse(file_get_contents($file));
             return $data;
         }
-        throw new LocalException('E6');
+
+        throw new \Exception('file not found');
     }
 
     /**
-     * Este metodo es el encargado de recibir un array y traducirlo a su fuente original
+     * Este método es el encargado de recibir un array y traducirlo a su fuente original
      * @param array $array
      * @param null $uri
      * @return mixed

@@ -5,8 +5,7 @@ use PlasmaConduit\DependencyGraph;
 use PlasmaConduit\dependencygraph\DependencyGraphNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UCI\Boson\CacheBundle\Cache\Cache;
-use UCI\Boson\ExcepcionesBundle\Exception\LocalException;
-use UCI\Boson\IntegratorBundle\Model\IntegratorException;
+use UCI\Boson\IntegratorBundle\ServicesRest\HttpCode;
 
 class ServiceManager {
 
@@ -35,7 +34,10 @@ class ServiceManager {
 
     protected $eventDispatcher;
 
-    public  function __construct(Cache $cache, $sensitive=false)
+    /**
+     * @param IntegratorCache $cache     *
+     */
+    public  function __construct(IntegratorCache $cache, $sensitive=false)
     {
         $this->sensitive = $sensitive;
 
@@ -44,6 +46,11 @@ class ServiceManager {
 
     }
 
+    /**
+     *
+     * Establece el despachador de eventos del localizador de servicios
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function setEventDispatcher(EventDispatcherInterface $dispatcher)
     {
         $this->eventDispatcher = $dispatcher;
@@ -115,6 +122,9 @@ class ServiceManager {
     public function buildDependecyGraph(array $recursos)
     {
 
+        if (is_null($recursos)) {
+            new DependencyGraph();
+        }
         return $this->initGraph($recursos);
 
 
@@ -208,7 +218,7 @@ class ServiceManager {
         $collect = $this->Collect($name);
 
         if (!in_array($name['domain'],$domains)) {
-            throw new IntegratorException('E3');
+            return $uri;
         }
 
         if ($this->cache->contains($this::GRAPH_DEPENDENCY_ID)) {
@@ -218,6 +228,8 @@ class ServiceManager {
              * */
 
             $mapaArray = $this->Normalize($mapa->toArray());
+
+
             $found = false;
 
             //TODO Validar las llaves de dominio al menos, si no existe del dominio no se busca
@@ -242,8 +254,11 @@ class ServiceManager {
         }
         else
         {
-            throw new IntegratorException('E3');
+
+            return HttpCode::HTTP_SERVER_ERROR;
         }
+
+
 
         return $uri;
 
@@ -318,6 +333,8 @@ class ServiceManager {
     {
         $conected = false;
         $testConnected = false;
+
+
 
         //Comparo los tipos de recursos
         if ($dependencia[self::INDEX_SEARCH_TYPE]==$servicio[self::INDEX_SEARCH_TYPE]) {
@@ -401,7 +418,7 @@ class ServiceManager {
         }
         elseif ($this->cache->contains($this::COLECCTION_DEPENDENCY_ID)) {
 
-            $resources = $this->cache->fetch($this::COLECCTION_DEPENDENCY_ID);
+            $resources = (array)$this->cache->fetch($this::COLECCTION_DEPENDENCY_ID);
 
             foreach( $resources as $resource)
             {

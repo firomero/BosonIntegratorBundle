@@ -4,20 +4,37 @@ namespace UCI\Boson\IntegratorBundle\Metadata\Driver;
 
 use Metadata\Driver\AdvancedDriverInterface;
 
+/**
+ * Class ChainDriver
+ * @package UCI\Boson\IntegratorBundle\Metadata\Driver
+ */
 class ChainDriver implements AdvancedDriverInterface
 {
+    /**
+     * @var array
+     */
     protected $drivers;
 
+    /**
+     * @param array $drivers
+     */
     public function __construct(array $drivers = array())
     {
         $this->drivers = $drivers;
     }
 
+    /**
+     * @param DriverInterface $driver
+     */
     public function addDriver(DriverInterface $driver)
     {
         $this->drivers[] = $driver;
     }
 
+    /**
+     * @param \ReflectionClass $class
+     * @return null
+     */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
         foreach ($this->drivers as $driver) {

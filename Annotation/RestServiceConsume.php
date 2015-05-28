@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: root
+ * User: dacasals
  * Date: 28/01/15
  * Time: 15:59
  */
@@ -21,6 +21,11 @@ use UCI\Boson\IntegratorBundle\Annotation\Interfaces\ServiceAnnotationInterface;
  *   @Attribute("version", type="string"),
  *   @Attribute("optional", type="boolean"),
  * })
+
+ * Class RestServiceConsume. Anotación para etiquetar clases como recursos  a ser consumidos como dependencias.
+ *
+ * @author Daniel Arturo Casals Amat<dacasals@uci.cu>
+ * @package UCI\Boson\IntegratorBundle\Annotation
  */
 class RestServiceConsume  implements ServiceAnnotationInterface {
 

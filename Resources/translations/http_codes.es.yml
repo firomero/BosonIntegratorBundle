@@ -1,0 +1,12 @@
+codes:
+
+custom_messages:
+    404PUT: El recurso solicitado con el identificador %s no existe.
+    422PUT: No existe ninguna entrada del parámetro %s con el indentificador %s
+    200Delete: El recurso se eliminó con exito
+    idParamNotFound: EL parametro de indentificación %s no se encuentra en la petición.
+    404GET: El recurso solicitado no existe.
+    500NOTNULFieldPOST: El campo %s no puede ser nulo.
+    201POST: El recurso se ha creado satisfactoriamente.
+    400GETDate: El formato de la fecha no es valido.
+    400GETInteger: Uno de los parametros debe ser entero pero obtuvo %s .
