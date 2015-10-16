@@ -1,13 +1,13 @@
 {
     "name": "boson/integrator-bundle",
-    "license": "UCI-HAVANA",
+    "license": "MIT",
     "type": "symfony-bundle",
     "description": "Boson Integrator",
     "keywords": ["distribution","configuration"],
     "authors": [
         {
             "name": "Felix I. Romero Rodriguez",
-            "email": "firomero@uci.cu"
+            "email": "firomerorom4@gmail.com"
         }
     ],
     "autoload": {
@@ -39,5 +39,5 @@
             "UCI\\Boson\\IntegratorBundle\\Composer\\ScriptHandler::buildDefinitionSchema"
         ]
     },
-    "minimum-stability": "branches"
+    "minimum-stability": "master"
 }
